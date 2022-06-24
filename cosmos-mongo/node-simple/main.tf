@@ -77,38 +77,3 @@ resource "azurerm_cosmosdb_mongo_database" "cosmos-mongo-db" {
   account_name        = azurerm_cosmosdb_account.db.name
   throughput          = 400
 }
-
-data "azurerm_client_config" "current" {}
-
-resource "azurerm_key_vault" "keyvault" {
-  name                       = "cosmos-keyvault-${random_integer.ri.result}"
-  location                   = azurerm_resource_group.rg.location
-  resource_group_name        = azurerm_resource_group.rg.name
-  tenant_id                  = data.azurerm_client_config.current.tenant_id
-  sku_name                   = "premium"
-  soft_delete_retention_days = 7
-
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-
-    key_permissions = [
-      "Create",
-      "Get",
-    ]
-
-    secret_permissions = [
-      "Set",
-      "Get",
-      "Delete",
-      "Purge",
-      "Recover"
-    ]
-  }
-}
-
-resource "azurerm_key_vault_secret" "secret" {
-  name         = "cosmos-connection-string"
-  value        = tostring("${azurerm_cosmosdb_account.db.connection_strings[0]}")
-  key_vault_id = azurerm_key_vault.keyvault.id
-}

@@ -1,38 +1,27 @@
 const { MongoClient } = require('mongodb');
-const { SecretClient } = require("@azure/keyvault-secrets");
-const { DefaultAzureCredential } = require("@azure/identity");
 
 // Load the .env file if exists
 require('dotenv').config();
 
-const keyVaultName = process.env.AZ_KEY_VAULT_NAME;
-if (!keyVaultName) {
-  throw Errro('Azure Key Vault name not found');
+const AZ_COSMOS_CONNECTION_STRING = process.env.AZ_COSMOS_CONNECTION_STRING;
+if (!AZ_COSMOS_CONNECTION_STRING) {
+  throw Error('Azure Cosmos DB Connection string not found');
 }
-const secretName = process.env.AZ_SECRET_NAME;
-if (!secretName) {
-  throw Error('Azure Key Vault secret name not found');
-}
+
+const client = new MongoClient(AZ_COSMOS_CONNECTION_STRING);
 
 async function run() {
-  const credential = new DefaultAzureCredential();
-
-  const url = "https://" + keyVaultName + ".vault.azure.net";
-  const secretClient = new SecretClient(url, credential);
-  const secret = await secretClient.getSecret(secretName);
-
-  const mongoClient = new MongoClient(secret.value);
   try {
-    await mongoClient.connect();
-    const db = mongoClient.db('airbnb');
+    await client.connect();
+    const db = client.db('airbnb');
     const listingsAndReviews = db.collection('listingsAndReviews');
     await insertListings(listingsAndReviews);
     await findListings(listingsAndReviews, 5);
-    await deleteListing(listingsAndReviews);
+    await deleteListing(listingsAndReviews)
   } catch (error) {
     console.log(error);
   } finally {
-    await mongoClient.close()
+    await client.close()
   }
 }
 
@@ -55,7 +44,7 @@ async function insertListings(collection) {
 async function findListings(collection, resultsLimit) {
   const cursor = collection
     .find()
-    .limit(resultsLimit);
+    .limit(resultsLimit)
 
   const results = await cursor.toArray();
   if (results.length > 0) {
@@ -78,7 +67,7 @@ async function findListings(collection, resultsLimit) {
 }
 
 async function deleteListing(collection) {
-  const query = { name: { $regex: 'garden' } };
+  const query = { name: { $regex: 'garden' } }
   const result = await collection.deleteMany(query);
   console.log('Deleted ' + result.deletedCount + ' documents');
 }
