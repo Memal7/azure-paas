@@ -72,7 +72,7 @@ resource "azurerm_cosmosdb_account" "db" {
 }
 
 resource "azurerm_cosmosdb_mongo_database" "cosmos-mongo-db" {
-  name                = "tfex-cosmos-mongo-db"
+  name                = "airbnb"
   resource_group_name = azurerm_cosmosdb_account.db.resource_group_name
   account_name        = azurerm_cosmosdb_account.db.name
   throughput          = 400

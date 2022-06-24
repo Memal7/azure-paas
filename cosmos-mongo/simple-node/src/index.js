@@ -2,6 +2,7 @@ const { MongoClient } = require('mongodb');
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
 
+// Load the .env file if exists
 require('dotenv').config();
 
 const AZ_COSMOS_CONNECTION_STRING = process.env.AZ_COSMOS_CONNECTION_STRING;
