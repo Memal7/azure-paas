@@ -1,15 +1,26 @@
-param location string = resourceGroup().location
-param namePrefix string = 'storage'
+// Define parameters
+param storageAccountName string = 'stgaccbicep${uniqueString(resourceGroup().id)}'
+param appServiceAppName string = 'appServiceBicep${uniqueString(resourceGroup().id)}'
+param location string = 'North Europe'
 
-var storageAccountName = '${namePrefix}${uniqueString(resourceGroup().id)}'
-var storageAccountSku = 'Standard_RAGRS'
+// In terminal you will asked, if the environment is prod or nonprod.
+@allowed([
+  'nonprod'
+  'prod'
+])
+param environmentType string
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
+// Define the variables
+var storageAccountSkuName = (environmentType == 'prod') ? 'Standard_GRS' : 'Standard_LRS'
+
+
+// Create a Storage Account
+resource storageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' = {
   name: storageAccountName
   location: location
   kind: 'StorageV2'
   sku: {
-    name: storageAccountSku
+    name: storageAccountSkuName
   }
   properties: {
     accessTier: 'Hot'
