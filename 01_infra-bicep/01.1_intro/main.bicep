@@ -34,11 +34,12 @@ param appServicePlanSku object = {
   tier: 'Free'
   capacity: 1
 }
+
 @description('Object parameters for tags')
 param resourceTags object = {
   env: 'dev'
   creaor: 'memal7'
-  CostCenter: '1000100'
+  CostCenter: 1000100
   Team: 'Infra'
 }
 
@@ -61,8 +62,8 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' = {
   properties: {
     accessTier: 'Hot'
     supportsHttpsTrafficOnly: true
-    tags: resourceTags
   }
+  tags: resourceTags
 }
 
 output storageAccountId string = storageAccount.id

@@ -1,5 +1,5 @@
 // Define parameters
-param location string = 'swedencentral'
+param location string = resourceGroup().location
 
 @allowed([
   'dev'
