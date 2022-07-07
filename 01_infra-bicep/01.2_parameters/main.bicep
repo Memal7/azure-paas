@@ -72,6 +72,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' = {
 
 output storageAccountId string = storageAccount.id
 
+// Create a SQL Server
 resource sqlServer 'Microsoft.Sql/servers@2020-11-01-preview' = {
   name: sqlServerName
   location: location
@@ -81,6 +82,8 @@ resource sqlServer 'Microsoft.Sql/servers@2020-11-01-preview' = {
   }
 }
 
+
+// Create a SQL Database
 resource sqlDatabase 'Microsoft.Sql/servers/databases@2020-11-01-preview' = {
   parent: sqlServer
   name: sqlDatabaseName
