@@ -5,6 +5,7 @@ Use parameters when things changes between each deployment:
 - Locations into which to deploy the resources
 - Settings that affect the pricing of resources, like their SKUs, pricing tiers, and instance counts
 - Credentials and information needed to access other systems that aren't defined in the template
+
 Use variables when the values are the same for each deployment:
 - Names  of the resources which shouldn't be unique
 - Location of resources when it doesn't change in each deployment
