@@ -1,6 +1,7 @@
+//////////////////////////////////////////// parameters //////////////////////////////////////////// 
+
 param location string = resourceGroup().location
 
-// It will ask in terminal, if the environment is prod or nonprod. Type 1 0r 2
 @allowed([
   'nonprod'
   'prod'
@@ -9,12 +10,17 @@ param env string = 'nonprod'
 
 param appServiceAppName string = 'appServiceBicep${uniqueString(resourceGroup().id)}'
 
+
+//////////////////////////////////////////// resources ////////////////////////////////////////////
+
+// create commen tags
 var resourceTag = {
   Environment: env
   Application: 'SCM'
   Component: 'Common'
 }
 
+// create a service bus namespace
 module servicebus 'servicebus.bicep' = {
   name: 'deployServiceBus'
   params: {
@@ -23,6 +29,7 @@ module servicebus 'servicebus.bicep' = {
   }
 }
 
+// create a cosmos db
 module cosmos 'cosmosdb.bicep' = {
   name: 'deployCosmosAccount'
   params: {
@@ -30,7 +37,7 @@ module cosmos 'cosmosdb.bicep' = {
   }
 }
 
-// Create an App Service
+// create an App Service
 module appService 'appserviceplan.bicep' = {
   name: 'appService'
   params: {
@@ -40,4 +47,6 @@ module appService 'appserviceplan.bicep' = {
   }
 }
 
+
+//////////////////////////////////////////// outputs //////////////////////////////////////////// 
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName
