@@ -1,5 +1,6 @@
 /*
 ########## When to use parameter and when variables? ##########
+A parameter lets you bring in valves from outside the bicep.
 Use parameters when things changes between each deployment:
 - The names of resources that need to be unique
 - Locations into which to deploy the resources
@@ -7,6 +8,8 @@ Use parameters when things changes between each deployment:
 - Credentials and information needed to access other systems that aren't defined in the template
 
 Use variables when the values are the same for each deployment:
+Variables let you store important information in one place and refer to it throughout
+the template without having to copy and paste it.
 - Names  of the resources which shouldn't be unique
 - Location of resources when it doesn't change in each deployment
 - Reuseable values within the template
